@@ -16,6 +16,19 @@ Only those that I could solve - at least partially - are in the repo.
 Typicall the `main()` function points to the test data only.
 To run the respective main use: `cargo run --bin day1_1`.
 
+== test
+
+I use TDD for the AoC, so I typically use some the `test` subcommand of `cargo`.
+
+[source, bash]
+----
+cargo test --bin day1_1
+cargo test --bin day1_2 -- --nocapture
+----
+
+This will run all the tests for `day1_1`, with the test results only.
+The second command also prints out the results for `day1_2`.
+
 == helper
 
 The are a few little helpers, for example for reading the ASCII data into a `Vec<String>` for simplicity.

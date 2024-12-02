@@ -49,6 +49,7 @@ mod tests {
     fn day1_res() {
         let d = advent_of_code::Reader::read_file("./input/day1_1_test.txt").unwrap();
         let result = day1_1(&d);
+        println!("result: {result}");
         assert_eq!(result, 31);
     }
 
@@ -56,6 +57,7 @@ mod tests {
     fn day1_final() {
         let d = advent_of_code::Reader::read_file("./input/day1_1.txt").unwrap();
         let result = day1_1(&d);
+        println!("result: {result}");
         assert_eq!(result, 21070419);
     }
 }
