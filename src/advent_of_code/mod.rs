@@ -61,4 +61,3 @@ pub fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
 
     transposed_matrix
 }
-
