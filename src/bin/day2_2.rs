@@ -38,7 +38,7 @@ fn check_level(steps: &String) -> Option<usize> {
         .collect();
     match check_conditions(&steps) {
         true => Some(1),
-        false => check_conditions_modified_vector(&steps)
+        false => check_conditions_modified_vector(&steps),
     }
 }
 
