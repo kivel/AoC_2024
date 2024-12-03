@@ -11,6 +11,25 @@ fn check_conditions(vec: &Vec<u32>) -> bool {
     let step_size = steps.iter().all(|v| (v != &0 && v.abs() <= 3));
     (monotonic_inc || monotonic_dec) && step_size
 }
+
+fn check_conditions_modified_vector(vec: &Vec<u32>) -> Option<usize> {
+    match vec
+        .iter()
+        .enumerate()
+        .filter(|(i, _)| {
+            let mut local_vec = vec.clone();
+            print!("i={} ", *i);
+            local_vec.remove(*i);
+            check_conditions(&local_vec)
+        })
+        .next()
+        .is_some()
+    {
+        true => Some(1),
+        false => None,
+    }
+}
+
 fn check_level(steps: &String) -> Option<usize> {
     let steps: Vec<u32> = steps
         .split_whitespace()
@@ -19,23 +38,7 @@ fn check_level(steps: &String) -> Option<usize> {
         .collect();
     match check_conditions(&steps) {
         true => Some(1),
-        false => {
-            match steps
-                .iter()
-                .enumerate()
-                .filter(|(i, _)| {
-                    let mut local_vec = steps.clone();
-                    print!("i={} ", *i);
-                    local_vec.remove(*i);
-                    check_conditions(&local_vec)
-                })
-                .next()
-                .is_some()
-            {
-                true => Some(1),
-                false => None,
-            }
-        }
+        false => check_conditions_modified_vector(&steps)
     }
 }
 
