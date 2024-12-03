@@ -1,34 +1,15 @@
-use std::collections::HashSet;
-
 #[path = "../advent_of_code/mod.rs"]
 mod advent_of_code;
 
-// There is no build in `abs` for u32 in Rust, who would have guessed that.
-fn step_size_ok(a: &u32, b: &u32, step_size: usize) -> bool {
-    match a.abs_diff(*b) {
-        step if step > step_size.try_into().unwrap() => false, // must be below step_size
-        step if step == 0 => false,                            // can't be zero
-        _ => true,
-    }
-}
-
-fn is_valid_bad_indices(vec: &Vec<u32>) -> (bool, HashSet<usize>) {
-    let window_size: usize = 2;
-    let mut bad_indices = HashSet::new();
-    vec.windows(window_size)
-        .enumerate()
-        .filter(|(_, _)| {
-            let monotonic_inc = vec.windows(2).all(|w| (w[0] < w[1]));
-            let monotonic_dec = vec.windows(2).all(|w| (w[0] > w[1]));
-            let step_size = vec.windows(2).all(|w| step_size_ok(&w[0], &w[1], 3));
-            !((monotonic_inc || monotonic_dec) && step_size)
-        })
-        .for_each(|(i, _)| {
-            bad_indices.insert(i);
-            bad_indices.insert(i + 1);
-        });
-
-    (bad_indices.is_empty(), bad_indices)
+fn check_conditions(vec: &Vec<u32>) -> bool {
+    let steps = vec
+        .windows(2)
+        .map(|w| w[0] as i32 - w[1] as i32)
+        .collect::<Vec<i32>>();
+    let monotonic_inc = steps.iter().all(|v| v.is_positive());
+    let monotonic_dec = steps.iter().all(|v| v.is_negative());
+    let step_size = steps.iter().all(|v| (v != &0 && v.abs() <= 3));
+    (monotonic_inc || monotonic_dec) && step_size
 }
 
 #[derive(Debug)]
@@ -43,16 +24,22 @@ impl Level {
             .into_iter()
             .map(|s| s.parse::<u32>().unwrap())
             .collect();
-        match is_valid_bad_indices(&steps) {
-            (true, _) => Some(Level { steps }),
-            (false, bad_indices) => {
-                match bad_indices.iter().any(|i| {
-                    let mut local_vec = steps.clone();
-                    print!(" {} ", *i);
-                    local_vec.remove(*i);
-                    is_valid_bad_indices(&local_vec).0
-                }) {
-                    true => Some(Level { steps }),
+        match check_conditions(&steps) {
+            true => Some(Level { steps: steps }),
+            false => {
+                match steps
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| {
+                        let mut local_vec = steps.clone();
+                        print!("i={} ", *i);
+                        local_vec.remove(*i);
+                        check_conditions(&local_vec)
+                    })
+                    .next()
+                    .is_some()
+                {
+                    true => Some(Level { steps: steps }),
                     false => None,
                 }
             }
