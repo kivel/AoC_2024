@@ -11,37 +11,29 @@ fn check_conditions(vec: &Vec<u32>) -> bool {
     let step_size = steps.iter().all(|v| (v != &0 && v.abs() <= 3));
     (monotonic_inc || monotonic_dec) && step_size
 }
-
-#[derive(Debug)]
-struct Level {
-    steps: Vec<u32>,
-}
-
-impl Level {
-    fn new(steps: &String) -> Option<Level> {
-        let steps: Vec<u32> = steps
-            .split_whitespace()
-            .into_iter()
-            .map(|s| s.parse::<u32>().unwrap())
-            .collect();
-        match check_conditions(&steps) {
-            true => Some(Level { steps: steps }),
-            false => {
-                match steps
-                    .iter()
-                    .enumerate()
-                    .filter(|(i, _)| {
-                        let mut local_vec = steps.clone();
-                        print!("i={} ", *i);
-                        local_vec.remove(*i);
-                        check_conditions(&local_vec)
-                    })
-                    .next()
-                    .is_some()
-                {
-                    true => Some(Level { steps: steps }),
-                    false => None,
-                }
+fn check_level(steps: &String) -> Option<usize> {
+    let steps: Vec<u32> = steps
+        .split_whitespace()
+        .into_iter()
+        .map(|s| s.parse::<u32>().unwrap())
+        .collect();
+    match check_conditions(&steps) {
+        true => Some(1),
+        false => {
+            match steps
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| {
+                    let mut local_vec = steps.clone();
+                    print!("i={} ", *i);
+                    local_vec.remove(*i);
+                    check_conditions(&local_vec)
+                })
+                .next()
+                .is_some()
+            {
+                true => Some(1),
+                false => None,
             }
         }
     }
@@ -51,8 +43,8 @@ impl Level {
 fn day2_2(data: &Vec<String>) -> u32 {
     data.iter()
         .inspect(|l| print!("line: {l} |"))
-        .map(|l| match Level::new(l) {
-            Some(_) => 1,
+        .map(|l| match check_level(l) {
+            Some(x) => x as u32,
             None => 0,
         })
         .inspect(|x| println!(" --> {x}"))
@@ -71,7 +63,7 @@ mod tests {
     use crate::{advent_of_code, day2_2};
 
     #[test]
-    fn day1_res() {
+    fn res_test() {
         let d = advent_of_code::Reader::read_file("./input/day2_1_test.txt").unwrap();
         let result = day2_2(&d);
         println!("result: {result}");
@@ -79,7 +71,7 @@ mod tests {
     }
 
     #[test]
-    fn day1_final() {
+    fn res_final() {
         let d = advent_of_code::Reader::read_file("./input/day2_1.txt").unwrap();
         let result = day2_2(&d);
         println!("result: {result}");
