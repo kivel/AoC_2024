@@ -10,34 +10,30 @@ fn get_instructions(text: &str) -> Vec<&str> {
     // Collect all matches as strings
     re.find_iter(text).map(|mat| mat.as_str()).collect()
 }
-
 fn product_from_match(s: &str) -> usize {
-    let parts = s.split_once(",").unwrap();
-    let f1: usize = parts.0.strip_prefix("mul(").unwrap().parse().unwrap();
-    let f2: usize = parts.1.strip_suffix(")").unwrap().parse().unwrap();
-    f1 * f2
+    s.strip_prefix("mul(")
+        .and_then(|inner| inner.strip_suffix(")"))
+        .and_then(|contents| contents.split_once(','))
+        .map(|(f1, f2)| 
+            f1.parse::<usize>()
+                .and_then(|x| f2.parse::<usize>().map(|y| x * y))
+                .expect("Invalid number in multiplication")
+        )
+        .expect("Invalid multiplication instruction")
 }
-// The puzlle calls for two lists (given as two columns in a ascii file) to be sorted and line by line the absolute differences need to be summed up.
+
 fn day3_2(data: &str) -> usize {
-    let mut instructions = VecDeque::from(get_instructions(data));
-
-    let mut factor: usize = 1;
-    let mut sum: usize = 0;
-
-    while !instructions.is_empty() {
-        let i = instructions.pop_front();
-        let p = match i {
-            Some(inst) if inst.contains("do()") => {factor =1; continue;},
-            Some(inst) if inst.contains("don't()") => {factor = 0; continue;},
-            Some(inst) => product_from_match(inst),
-            None => panic!("Unexpected end of instructions"),
-        };
-        sum += p * factor;
-        println!("i={i:?}  | factor={factor} | p={p} | sum = {sum}");
-    };
-    sum
-
+    let instructions = get_instructions(data);
+    
+    instructions.iter()
+        .fold((0, 1), |(sum, factor), instruction| match *instruction {
+            "do()" => (sum, 1),
+            "don't()" => (sum, 0),
+            inst => (sum + product_from_match(inst) * factor, factor)
+        })
+        .0
 }
+
 fn main() {
     let d = fs::read_to_string("./input/day3_2_test.txt").unwrap(); // Read the entire file into a String
     let sum = day3_2(&d);
