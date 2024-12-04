@@ -10,7 +10,6 @@ fn get_instructions(text: &str) -> Vec<&str> {
     // Collect all matches as strings
     re.find_iter(text).map(|mat| mat.as_str()).collect()
 }
-// The puzlle calls for two lists (given as two columns in a ascii file) to be sorted and line by line the absolute differences need to be summed up.
 fn day3_1(data: &str) -> usize {
     let instructions = get_instructions(data);
 
