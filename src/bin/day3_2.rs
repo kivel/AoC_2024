@@ -1,7 +1,7 @@
 #[path = "../advent_of_code/mod.rs"]
 mod advent_of_code;
 
-use std::{collections::VecDeque, fs};
+use std::fs;
 
 use regex::Regex;
 
@@ -27,7 +27,7 @@ fn day3_2(data: &str) -> usize {
 
     instructions
         .iter()
-        .fold((0, 1), |(sum, factor), instruction| match *instruction {
+        .fold((0, 1), |(sum, factor), &instruction| match instruction {
             "do()" => (sum, 1),
             "don't()" => (sum, 0),
             inst => (sum + product_from_match(inst) * factor, factor),
@@ -45,7 +45,7 @@ fn main() {
 mod tests {
     use std::fs;
 
-    use crate::{advent_of_code, day3_2};
+    use crate::day3_2;
 
     #[test]
     fn res_test() {
