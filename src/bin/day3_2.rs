@@ -14,22 +14,23 @@ fn product_from_match(s: &str) -> usize {
     s.strip_prefix("mul(")
         .and_then(|inner| inner.strip_suffix(")"))
         .and_then(|contents| contents.split_once(','))
-        .map(|(f1, f2)| 
+        .map(|(f1, f2)| {
             f1.parse::<usize>()
                 .and_then(|x| f2.parse::<usize>().map(|y| x * y))
                 .expect("Invalid number in multiplication")
-        )
+        })
         .expect("Invalid multiplication instruction")
 }
 
 fn day3_2(data: &str) -> usize {
     let instructions = get_instructions(data);
-    
-    instructions.iter()
+
+    instructions
+        .iter()
         .fold((0, 1), |(sum, factor), instruction| match *instruction {
             "do()" => (sum, 1),
             "don't()" => (sum, 0),
-            inst => (sum + product_from_match(inst) * factor, factor)
+            inst => (sum + product_from_match(inst) * factor, factor),
         })
         .0
 }
