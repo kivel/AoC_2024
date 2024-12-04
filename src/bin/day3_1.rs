@@ -36,7 +36,7 @@ fn main() {
 mod tests {
     use std::fs;
 
-    use crate::{advent_of_code, day3_1};
+    use crate::day3_1;
 
     #[test]
     fn res_test() {
