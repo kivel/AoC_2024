@@ -18,7 +18,8 @@ fn is_valid(vec: &Vec<u32>) -> bool {
     (monotonic_inc || monotonic_dec) && step_size
 }
 
-#[derive(Debug)]
+// #[derive(Debug)]
+#[allow(dead_code)]
 struct Level {
     steps: Vec<u32>,
 }
@@ -41,7 +42,7 @@ impl Level {
 fn day2_1(data: &Vec<String>) -> u32 {
     data.iter()
         .map(|l| match Level::new(l) {
-            Some(level) => 1,
+            Some(_) => 1,
             None => 0,
         })
         .collect::<Vec<u32>>()
