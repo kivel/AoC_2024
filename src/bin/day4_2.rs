@@ -69,7 +69,7 @@ fn get_one_step_diagonals(
     Some(vec![nw_se, ne_sw])
 }
 
-fn get_strings_in_directions(grid: &[Vec<char>], start: (usize, usize)) -> Option<Vec<String>> {
+fn get_strings_on_diagonals(grid: &[Vec<char>], start: (usize, usize)) -> Option<Vec<String>> {
     let diags = match get_one_step_diagonals(&grid, start) {
         Some(diags) => diags,
         None => return None,
@@ -139,9 +139,9 @@ fn day4_2(data: &Vec<String>) -> usize {
 
     coordinates
         .drain()
-        .filter(|&c| get_strings_in_directions(&grid, c).is_some())
+        .filter(|&c| get_strings_on_diagonals(&grid, c).is_some())
         .map(|c| {
-            match get_strings_in_directions(&grid, c)
+            match get_strings_on_diagonals(&grid, c)
                 .unwrap()
                 .iter()
                 .all(|s| s == "MAS" || s == "SAM")
