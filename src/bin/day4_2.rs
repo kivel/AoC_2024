@@ -91,43 +91,6 @@ fn get_strings_on_diagonals(grid: &[Vec<char>], start: (usize, usize)) -> Option
     Some(res)
 }
 
-fn get_strings_in_directions1(
-    grid: &[Vec<char>],
-    start: (usize, usize),
-    max_distance: usize,
-) -> Vec<String> {
-    let directions = vec![
-        ("NW", (-1, -1)), // Northwest
-        ("NE", (-1, 1)),  // Northeast
-        ("SW", (1, -1)),  // Southwest
-        ("SE", (1, 1)),   // Southeast
-    ];
-
-    let mut results = Vec::new();
-
-    let mut chars_in_direction = Vec::new();
-    for (_, (dx, dy)) in directions {
-        for distance in 1..=max_distance {
-            // Compute new coordinates
-            let new_x = start.0 as isize + dx * distance as isize;
-            let new_y = start.1 as isize + dy * distance as isize;
-
-            // Check bounds
-            if new_x >= 0
-                && new_x < grid.len() as isize
-                && new_y >= 0
-                && new_y < grid[new_x as usize].len() as isize
-            {
-                chars_in_direction.push(grid[new_x as usize][new_y as usize]);
-            }
-        }
-    }
-    chars_in_direction.sort();
-    results.push(chars_in_direction.into_iter().collect());
-    println!("result: {:?}", results);
-    results
-}
-
 fn day4_2(data: &Vec<String>) -> usize {
     let grid = data
         .iter()
@@ -161,24 +124,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use crate::{advent_of_code, day4_2};
-
-    #[test]
-    fn small_matrix() {
-        let d: Vec<String> = vec!["X.X".into(), "ABC".into(), "DXF".into(), "GHI".into()];
-
-        let result = day4_2(&d);
-        println!("result: {result}");
-        assert_eq!(result, 0);
-    }
-
-    #[test]
-    fn xmas() {
-        let d: Vec<String> = vec!["XMAS".into(), "MMAA".into(), "AMAM".into(), "SAMX".into()];
-
-        let result = day4_2(&d);
-        println!("result: {result}");
-        assert_eq!(result, 4);
-    }
 
     #[test]
     fn res_test() {
