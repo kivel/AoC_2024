@@ -27,7 +27,7 @@ fn find_x(grid: &Vec<Vec<char>>) -> Option<HashSet<(usize, usize)>> {
     // Return result
     match coordinates.is_empty() {
         true => None,
-        false => Some(coordinates)
+        false => Some(coordinates),
     }
 }
 
@@ -82,12 +82,12 @@ fn day4_1(data: &Vec<String>) -> usize {
 
     coordinates
         .drain()
-        .map(|c| 
+        .map(|c| {
             get_strings_in_directions(&grid, c, 3)
                 .iter()
                 .filter(|&s| s == "XMAS")
                 .count()
-        )
+        })
         .sum()
 }
 fn main() {
