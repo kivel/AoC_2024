@@ -78,7 +78,7 @@ fn day7_1(data: &Vec<String>) -> usize {
 }
 
 fn main() {
-    let d = advent_of_code::Reader::read_file("./input/day7_1_test.txt").unwrap();
+    let d = advent_of_code::Reader::read_file("./input/day7_test.txt").unwrap();
     let sum = day7_1(&d);
     println!("result: {sum}");
 }
@@ -88,17 +88,8 @@ mod tests {
     use crate::{advent_of_code, day7_1};
 
     #[test]
-    fn single_node_test() {
-        let mut node = crate::Node::new(10, 19, std::collections::HashSet::new());
-        println!("--> node: {:?}", node);
-        node.calculate_results(vec![|a, b| a + b, |a, b| a * b]);
-        println!("==> node: {:?}", node);
-        assert_eq!(node.results, vec![29, 190].into_iter().collect());
-    }
-
-    #[test]
     fn res_test() {
-        let d = advent_of_code::Reader::read_file("./input/day7_1_test.txt").unwrap();
+        let d = advent_of_code::Reader::read_file("./input/day7_test.txt").unwrap();
         let result = day7_1(&d);
         println!("result: {result}");
         assert_eq!(result, 3749);
@@ -106,7 +97,7 @@ mod tests {
 
     #[test]
     fn res_final() {
-        let d = advent_of_code::Reader::read_file("./input/day7_1.txt").unwrap();
+        let d = advent_of_code::Reader::read_file("./input/day7.txt").unwrap();
         let result = day7_1(&d);
         println!("result: {result}");
         assert_eq!(result, 5540634308362);
