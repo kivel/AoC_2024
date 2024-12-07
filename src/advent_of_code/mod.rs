@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::fs::File;
 use std::io::BufRead;
 use std::path::Path;
@@ -22,6 +23,41 @@ impl Reader {
             Err(e) => panic!("Error opening file {}: {}", filename, e),
         };
         Ok(org_data)
+    }
+}
+
+#[derive(Debug, Clone)]
+#[allow(dead_code)]
+pub struct LimitedVecDeque<T> {
+    deque: VecDeque<T>,
+    capacity: usize,
+}
+
+#[allow(dead_code)]
+impl<T> LimitedVecDeque<T> {
+    /// Creates a new `LimitedVecDeque` with the given capacity.
+    pub fn new(capacity: usize) -> Self {
+        Self {
+            deque: VecDeque::with_capacity(capacity),
+            capacity,
+        }
+    }
+
+    /// Adds a value to the deque, maintaining the maximum capacity.
+    pub fn push(&mut self, value: T) {
+        if self.deque.len() == self.capacity {
+            self.deque.pop_front(); // Remove the oldest value
+        }
+        self.deque.push_back(value);
+    }
+
+    /// Returns an immutable reference to the underlying `VecDeque`.
+    pub fn as_deque(&self) -> &VecDeque<T> {
+        &self.deque
+    }
+
+    pub fn len(&self) -> usize {
+        self.deque.len()
     }
 }
 
@@ -60,4 +96,24 @@ pub fn transpose(matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     }
 
     transposed_matrix
+}
+
+#[allow(dead_code)]
+pub fn lines_to_matrix(lines: &Vec<String>) -> Vec<Vec<char>> {
+    lines
+        .iter()
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>()
+}
+
+#[allow(dead_code)]
+pub fn find_char(grid: Vec<Vec<char>>, char: char) -> (usize, usize) {
+    for (row_idx, row) in grid.iter().enumerate() {
+        for (col_idx, &c) in row.iter().enumerate() {
+            if c == char {
+                return (row_idx, col_idx);
+            }
+        }
+    }
+    panic!("The character '{}' was not found in the grid.", char)
 }
