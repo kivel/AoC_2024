@@ -1,4 +1,7 @@
-use std::{cmp::{max, min}, collections::{HashMap, HashSet}};
+use std::{
+    cmp::{max, min},
+    collections::{HashMap, HashSet},
+};
 
 #[path = "../advent_of_code/mod.rs"]
 mod advent_of_code;
@@ -47,16 +50,17 @@ impl Grid {
     // 1,1 and 2,2 (dx = -1, dy = -1) -> 0,0 and 3,3
     // 2,2 and 1,1 (dx = +1, dy = +1) -> 0,0 and 3,3
 
-    // 1,2 and 2,1 (dx = -1, dy = +1) -> 0,3 and 3,0 
-    // 2,1 and 1,2 (dx = +1, dy = -1) -> 0,3 and 3,0 
+    // 1,2 and 2,1 (dx = -1, dy = +1) -> 0,3 and 3,0
+    // 2,1 and 1,2 (dx = +1, dy = -1) -> 0,3 and 3,0
     fn antinodes_from_pair(&mut self, pair: &((usize, usize), (usize, usize))) {
         let (pos1_x, pos1_y) = pair.1;
         let (pos2_x, pos2_y) = pair.0;
         let dx = pos1_x as isize - pos2_x as isize;
         let dy = pos1_y as isize - pos2_y as isize;
 
-        let positive = (dx.is_negative() && dy.is_negative()) || (dx.is_positive() && dy.is_positive());
-        
+        let positive =
+            (dx.is_negative() && dy.is_negative()) || (dx.is_positive() && dy.is_positive());
+
         let mut min_x = min(pos1_x, pos2_x) as isize - dx;
         let mut max_x = max(pos1_x, pos2_x) as isize + dx;
         let mut min_y = min(pos1_y, pos2_y) as isize - dy;
@@ -64,41 +68,23 @@ impl Grid {
 
         match positive {
             true => {
-                min_x = min(pos1_x, pos2_x) as isize - dx;
-                max_x = max(pos1_x, pos2_x) as isize + dx;
-                min_y = min(pos1_y, pos2_y) as isize - dy;
-                max_y = max(pos1_y, pos2_y) as isize + dy;
-            },
+                min_x = pos2_x as isize - dx;
+                max_x = pos1_x as isize + dx;
+                min_y = pos2_y as isize - dy;
+                max_y = pos1_y as isize + dy;
+            }
             false => {
                 min_x = pos1_x as isize + dx;
                 max_x = pos2_x as isize - dx;
                 min_y = pos1_y as isize + dy;
                 max_y = pos2_y as isize - dy;
-            },
-            // false => {}
-            // false => {
-            //     min_x = min(pos1_x, pos2_x) as isize + dx;
-            //     max_x = max(pos1_x, pos2_x) as isize - dx;
-            //     min_y = min(pos1_y, pos2_y) as isize + dy;
-            //     max_y = max(pos1_y, pos2_y) as isize - dy;
-            // },
+            }
         };
-        
+
         let nodes = vec![(min_x, min_y), (max_x, max_y)];
-        nodes
-        .iter()
-        .for_each(|n| {
+        nodes.iter().for_each(|n| {
             Self::check_bound(&self, n).and_then(|n| Some(self.antinodes.insert(n)));
         });
-
-        // match Self::check_bound(&self, &(min_x, min_y)) {
-        //     Some(p) => self.antinodes.insert(p),
-        //     None => false
-        // };
-        // match Self::check_bound(&self, &(max_x, max_y)) {
-        //     Some(p) => self.antinodes.insert(p),
-        //     None => false
-        // };
     }
 }
 
@@ -126,11 +112,6 @@ fn generate_antenna_pairs(
 }
 
 fn day8_1(data: &Vec<String>) -> usize {
-    // let grid = data
-    //     .iter()
-    //     .map(|line| line.chars().collect::<Vec<char>>())
-    //     .collect::<Vec<Vec<char>>>();
-
     let mut grid = Grid::from_lines(data);
 
     let mut antennas: HashMap<char, HashSet<(usize, usize)>> = HashMap::new();
@@ -160,12 +141,10 @@ fn day8_1(data: &Vec<String>) -> usize {
     for line in &grid.matrix {
         println!("{:?}", line.iter().collect::<String>());
     }
-    
+
     println!("grid: {:?}", grid);
 
     grid.antinodes.len()
-
-    // 0
 }
 
 fn main() {
@@ -191,6 +170,6 @@ mod tests {
         let d = advent_of_code::Reader::read_file("./input/day8.txt").unwrap();
         let result = day8_1(&d);
         println!("result: {result}");
-        assert_eq!(result, 5540634308362);
+        assert_eq!(result, 413);
     }
 }
