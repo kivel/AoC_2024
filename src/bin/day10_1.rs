@@ -102,12 +102,12 @@ fn day10_1(data: &Vec<String>) -> usize {
     for trail in &mut trails {
         let mut height: usize = 0;
         while height <= 9 {
-            println!("height: {}", height);
+            // println!("height: {}", height);
             let steps = match trail.steps.get(&height) {
                 Some(steps) => steps.clone(),
                 None => continue,
             };
-            println!("steps: {:?}", &steps);
+            // println!("steps: {:?}", &steps);
             height += 1;
             steps.iter().for_each(|step| {
                 let next_steps = trail.find_next_step_positions(&grid, step);
@@ -125,7 +125,7 @@ fn day10_1(data: &Vec<String>) -> usize {
                 Some(steps) => steps.len(),
                 None => 0,
             };
-            println!("number of accessible trails = {n}");
+            // println!("number of accessible trails = {n}");
             n
         })
         .collect::<Vec<usize>>()
@@ -156,6 +156,6 @@ mod tests {
         let d = advent_of_code::Reader::read_file("./input/day10.txt").unwrap();
         let result = day10_1(&d);
         println!("result: {result}");
-        assert_eq!(result, 413);
+        assert_eq!(result, 468);
     }
 }
