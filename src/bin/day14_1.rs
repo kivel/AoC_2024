@@ -37,20 +37,6 @@ impl Robot {
         Self::new((pos_x, pos_y), (vel_x, vel_y), grid_size)
     }
 
-    // fn move_robot(&mut self, time: isize) {
-    //     // move the robot
-    //     self.position.0 += time * self.velocity.0;
-    //     self.position.1 += time * self.velocity.1;
-    //     self.position.0 = match self.position.0.is_positive() {
-    //         true => self.position.0 % self.grid_size.0,
-    //         false => self.grid_size.0 + self.position.0 % self.grid_size.0
-    //     };
-    //     self.position.1 = match self.position.1.is_positive() {
-    //         true => self.position.1 % self.grid_size.1,
-    //         false => self.grid_size.1 + self.position.1 % self.grid_size.1
-    //     };
-    // }
-
     fn move_robot(&mut self, time: isize) {
         // Move the robot
         self.position.0 += time * self.velocity.0;
